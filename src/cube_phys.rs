@@ -5,7 +5,6 @@ use sdl2::{pixels::Color, render::Canvas, video::Window};
 
 //TODO: Traits for engine stuff? Blehhhh
 
-#[derive(Debug)]
 pub struct Cube {
     pub side_length: f32,
     pub mass: f32,

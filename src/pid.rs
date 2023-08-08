@@ -2,7 +2,7 @@
 
 use std::time::Duration;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone)]
 pub struct PIDController {
     kp: f32,
     ki: f32,

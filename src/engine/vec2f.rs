@@ -2,7 +2,7 @@
 // i'm practicing.
 use std::ops;
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy)]
 pub struct Vec2f {
     pub x: f32,
     pub y: f32,
