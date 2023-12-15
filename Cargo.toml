@@ -1,16 +1,21 @@
 [package]
-name = "por1"
+name = "rust-pid-sim-bevy"
 version = "0.1.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-rand = "0.8.5"
-sdl2 = { version = "0.35.2", features = [
-    # "bundled",
-    # "gfx",
-    # "image",
-    # "mixer",
-    # "ttf",
-] }
+bevy = { version = "0.12.1", features = ["dynamic_linking"] }
+# https://bevyengine.org/learn/book/getting-started/setup/#enable-fast-compiles-optional:
+# NOTE: Remember to revert this (dynamic_linking) before releasing your game!
+# Otherwise you will need to include libbevy_dylib alongside your game if you want it to run.
+# If you remove the "dynamic" feature, your game executable can run standalone.
+
+# Enable a small amount of optimization in debug mode
+[profile.dev]
+opt-level = 1
+
+# Enable high optimizations for dependencies (incl. Bevy), but not for our code:
+[profile.dev.package."*"]
+opt-level = 3

@@ -1,3 +1,5 @@
+//TODO: Trait for controllers? BLEHHhh
+
 use std::time::Duration;
 
 #[derive(Clone)]
