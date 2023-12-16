@@ -1,0 +1,46 @@
+{
+    "version": "0.2.0",
+    "env": {
+        "PATH": "${env:USERPROFILE}/.rustup/toolchains/nightly-x86_64-pc-windows-msvc/bin;${workspaceFolder}/target/debug/deps;${env:PATH}"
+        // Switch `nightly` to `stable` if you're using Rust stable
+    },
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug executable 'rust-pid-sim-bevy'",
+            "cargo": {
+                "args": [
+                    "build",
+                    "--bin=rust-pid-sim-bevy",
+                    "--package=rust-pid-sim-bevy"
+                ],
+                "filter": {
+                    "name": "rust-pid-sim-bevy",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug unit tests in executable 'rust-pid-sim-bevy'",
+            "cargo": {
+                "args": [
+                    "test",
+                    "--no-run",
+                    "--bin=rust-pid-sim-bevy",
+                    "--package=rust-pid-sim-bevy"
+                ],
+                "filter": {
+                    "name": "rust-pid-sim-bevy",
+                    "kind": "bin"
+                }
+            },
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

@@ -12,7 +12,9 @@ bevy = { version = "0.12.1", features = ["dynamic_linking"] }
 # Otherwise you will need to include libbevy_dylib alongside your game if you want it to run.
 # If you remove the "dynamic" feature, your game executable can run standalone.
 
-# Enable a small amount of optimization in debug mode
+
+# # Enable a small amount of optimization in debug mode
+# This can increase compile times!
 [profile.dev]
 opt-level = 1
 
