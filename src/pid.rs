@@ -1,27 +1,29 @@
 use std::time::Duration;
 
-#[derive(Clone)]
+use bevy::prelude::*;
+
+#[derive(Clone, Component)]
 pub struct PIDController {
-    kp: f32,
-    ki: f32,
-    kd: f32,
+    kp: f64,
+    ki: f64,
+    kd: f64,
 
-    min_output: f32,
-    max_output: f32,
-    i_zone: f32,
+    min_output: f64,
+    max_output: f64,
+    i_zone: f64,
 
-    i_err: f32,
-    last_error: f32,
+    i_err: f64,
+    last_error: f64,
 }
 
 impl PIDController {
     pub fn new(
-        kp: f32,
-        ki: f32,
-        kd: f32,
-        min_output: f32,
-        max_output: f32,
-        i_zone: f32,
+        kp: f64,
+        ki: f64,
+        kd: f64,
+        min_output: f64,
+        max_output: f64,
+        i_zone: f64,
     ) -> PIDController {
         PIDController {
             kp,
@@ -34,35 +36,29 @@ impl PIDController {
             last_error: 0.0,
         }
     }
-    pub fn calculate(&mut self, dt: Duration, setpoint: f32, process_variable: f32) -> f32 {
+
+    pub fn calculate(&mut self, dt: Duration, setpoint: f64, process_variable: f64) -> f64 {
         let error = setpoint - process_variable;
 
         let p_term = self.kp * error;
 
-        let mut i_term = 0.0;
-
-        if error.abs() < self.i_zone {
-            self.i_err += error * dt.as_secs_f32();
-            i_term = self.i_err * self.ki;
+        let i_term = if error.abs() < self.i_zone {
+            self.i_err += error * dt.as_secs_f64();
+            self.i_err * self.ki
         } else {
             self.i_err = 0.0;
-        }
+            0.0
+        };
 
-        //  calculate d_err
         let d_err = error - self.last_error;
-        let d_term = self.kd * d_err / dt.as_secs_f32();
+        let mut d_term = self.kd * d_err / dt.as_secs_f64();
+        if d_term.is_nan() {
+            d_term = 0.;
+        }
         self.last_error = error;
 
-        // calculate output
         let output = p_term + i_term + d_term;
 
-        // clamp between min and max
-        if output < self.min_output {
-            return self.min_output;
-        } else if output > self.max_output {
-            return self.max_output;
-        } else {
-            return output;
-        }
+        output.clamp(self.min_output, self.max_output)
     }
 }
