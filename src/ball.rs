@@ -2,6 +2,7 @@ use bevy::math::Vec2;
 use bevy::{prelude::*, sprite::MaterialMesh2dBundle};
 
 use crate::pid::PIDController;
+use crate::sounds::PitchFrequency;
 use crate::MouseWorldCoords;
 
 pub struct BallPlugin;
@@ -26,24 +27,18 @@ fn make_ball(
             Ball,
             Velocity(Vec2::ZERO),
             Force(Vec2::ZERO),
-            Mass(0.1),
+            Mass(0.004),
             MaterialMesh2dBundle {
                 mesh: meshes.add(shape::Circle::new(30.).into()).into(),
-                // material: materials.add(ColorMaterial::from(Color::rgb(101., 207., 129.))),
                 material: materials.add(ColorMaterial::from(Color::AQUAMARINE)),
                 transform: Transform::IDENTITY,
                 ..default()
             },
+            PitchFrequency(440.),
         ))
         .with_children(|parent| {
-            let x_controller = PIDController::new(
-                10.0,
-                0.0,
-                0.60,
-                -f64::INFINITY,
-                f64::INFINITY,
-                f64::INFINITY,
-            );
+            let x_controller =
+                PIDController::new(4.0, 0.0, 0.0, -f64::INFINITY, f64::INFINITY, f64::INFINITY);
             let y_controller = x_controller.clone();
 
             parent.spawn((x_controller, ControllerType::XController));
@@ -76,14 +71,14 @@ fn update_pid_controllers(
             if let Ok((mut pid, controller_type)) = pid_query.get_mut(child) {
                 match controller_type {
                     ControllerType::XController => {
-                        let mx = mouse_world_coords.0.x as f64;
-                        let tx = tf.translation.x as f64;
+                        let mx = f64::from(mouse_world_coords.0.x);
+                        let tx = f64::from(tf.translation.x);
 
                         force.0.x = pid.calculate(time.delta(), mx, tx) as f32;
                     }
                     ControllerType::YController => {
-                        let my = mouse_world_coords.0.y as f64;
-                        let ty = tf.translation.y as f64;
+                        let my = f64::from(mouse_world_coords.0.y);
+                        let ty = f64::from(tf.translation.y);
 
                         force.0.y = pid.calculate(time.delta(), my, ty) as f32;
                     }
@@ -116,7 +111,7 @@ fn update_pid_controllers(
 }
 
 #[derive(Component)]
-struct Velocity(Vec2);
+pub struct Velocity(pub Vec2);
 
 #[derive(Component)]
 struct Force(Vec2);
@@ -131,4 +126,4 @@ enum ControllerType {
 }
 
 #[derive(Component)]
-struct Ball;
+pub struct Ball;

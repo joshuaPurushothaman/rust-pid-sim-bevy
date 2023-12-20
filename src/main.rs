@@ -1,11 +1,13 @@
 extern crate bevy;
 
-use bevy::log::{LogPlugin, Level};
+use bevy::audio::{AudioPlugin, SpatialScale};
+use bevy::log::{Level, LogPlugin};
 use bevy::prelude::*;
-use bevy::window::PrimaryWindow;
+use bevy::window::{close_on_esc, PrimaryWindow};
 
 mod ball;
 mod pid;
+mod sounds;
 
 fn main() {
     App::new()
@@ -14,7 +16,7 @@ fn main() {
                 .set(WindowPlugin {
                     primary_window: Some(Window {
                         title: "Rust PID Sim: with Bevy!".into(),
-                        resolution: (1400., 800.).into(),
+                        resolution: (1600., 900.).into(),
                         ..default()
                     }),
                     ..default()
@@ -24,11 +26,17 @@ fn main() {
                     level: Level::WARN,
                     ..default()
                 }),
+                // .set(AudioPlugin {
+                //     // TODO: move this around?
+                //     spatial_scale: SpatialScale::new_2d(1./100.),
+                //     ..default()
+                // }),
             ball::BallPlugin,
+            sounds::SpatialSoundBallPlugin,
         ))
         .init_resource::<MouseWorldCoords>()
         .add_systems(Startup, setup)
-        .add_systems(Update, update_mouse_world_coords)
+        .add_systems(Update, (update_mouse_world_coords, close_on_esc))
         .run();
 }
 #[derive(Component)]

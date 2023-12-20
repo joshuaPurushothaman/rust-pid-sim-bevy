@@ -3,12 +3,12 @@ name = "rust-pid-sim-bevy"
 version = "0.1.0"
 description = "Simulates a PID Controller... in Bevy now!"
 repository = "https://github.com/joshuaPurushothaman/rust-pid-sim-bevy"
-readme = "README.md"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = { version = "0.12.1", features = ["dynamic_linking"] }
+# bevy = { version = "0.12.1", features = ["dynamic_linking"] } # Use for development
+bevy = { version = "0.12.1" } # Use for deploys
 # https://bevyengine.org/learn/book/getting-started/setup/#enable-fast-compiles-optional:
 # NOTE: Remember to revert this (dynamic_linking) before releasing your game!
 # Otherwise you will need to include libbevy_dylib alongside your game if you want it to run.

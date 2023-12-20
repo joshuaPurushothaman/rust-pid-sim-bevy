@@ -25,7 +25,7 @@ impl PIDController {
         max_output: f64,
         i_zone: f64,
     ) -> PIDController {
-        PIDController {
+        Self {
             kp,
             ki,
             kd,
